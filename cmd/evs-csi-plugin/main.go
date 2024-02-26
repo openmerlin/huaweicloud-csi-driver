@@ -34,10 +34,11 @@ import (
 )
 
 var (
-	endpoint    string
-	nodeID      string
-	cloudConfig string
-	cluster     string
+	endpoint     string
+	nodeID       string
+	cloudConfig  string
+	cluster      string
+	removeConfig bool
 )
 
 func init() {
@@ -88,6 +89,8 @@ func main() {
 
 	cmd.PersistentFlags().StringVar(&cluster, "cluster", "", "The identifier of the cluster that the plugin is running in.")
 
+	cmd.PersistentFlags().BoolVar(&removeConfig, "remove-config", false, "Whether to remove config when server started")
+
 	logs.InitLogs()
 	defer logs.FlushLogs()
 
@@ -110,5 +113,8 @@ func handle() {
 	mount := mounts.GetMountProvider()
 	metadata := metadatas.GetMetadataProvider(metadatas.MetadataID)
 	d.SetupDriver(mount, metadata)
+	if removeConfig {
+		_ = os.Remove(cloudConfig)
+	}
 	d.Run()
 }
