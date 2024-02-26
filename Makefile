@@ -20,13 +20,13 @@ export GOPATH  ?=$(shell pwd)/../.go
 export GOBIN   ?=$(GOPATH)/bin
 
 # Images management
-REGISTRY_SERVER   ?=swr.cn-north-4.myhuaweicloud.com
-REGISTRY          ?=$(REGISTRY_SERVER)/k8s-csi
+REGISTRY_SERVER   ?=swr.cn-southwest-2.myhuaweicloud.com
+REGISTRY          ?=$(REGISTRY_SERVER)/modelfoundry
 REGISTRY_USERNAME ?=
 REGISTRY_PASSWORD ?=
 
 SOURCES := $(shell find . -name '*.go' 2>/dev/null)
-VERSION ?= $(shell git describe --dirty --tags --match='v*')
+VERSION := $(shell git rev-parse --verify HEAD)
 SECRET := $(shell cat </dev/urandom | head -n 1 | md5sum | head -c 32)
 LDFLAGS	:= "-w -s -X 'github.com/huaweicloud/huaweicloud-csi-driver/pkg/version.Version=$(VERSION)' \
  -X 'github.com/huaweicloud/huaweicloud-csi-driver/pkg/obs.Secret=$(SECRET)'"
